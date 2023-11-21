@@ -34,14 +34,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String myJankenText = '✌️';
   String computerJankenText = '?';
-  List<String> jankenList = ['✌️', '👊', '✋'];
 
   void chooseComputerText() {
     final random = Random();
     final randomNumber = random.nextInt(3);
-    final hand = jankenList[randomNumber];
+    final hand = Hand.values[randomNumber];
     setState(() {
-      computerJankenText = hand;
+      computerJankenText = hand.text;
     });
   }
 
@@ -68,6 +67,13 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 50,
             ),
             Text(
+              Result.win.text,
+              style: const TextStyle(fontSize: 30),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            Text(
               myJankenText,
               style: const TextStyle(fontSize: 200),
             ),
@@ -80,46 +86,80 @@ class _MyHomePageState extends State<MyHomePage> {
           FloatingActionButton(
             onPressed: () {
               setState(() {
-                myJankenText = '👊';
+                myJankenText = Hand.rock.text;
               });
               chooseComputerText();
             },
             tooltip: 'Increment',
-            child: const Text(
-              '👊',
-              style: TextStyle(fontSize: 30),
+            child: Text(
+              Hand.rock.text,
+              style: const TextStyle(fontSize: 30),
             ),
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
             onPressed: () {
               setState(() {
-                myJankenText = '✌️';
+                myJankenText = Hand.scissors.text;
               });
               chooseComputerText();
             },
             tooltip: 'Increment',
-            child: const Text(
-              '✌️',
-              style: TextStyle(fontSize: 30),
+            child: Text(
+              Hand.scissors.text,
+              style: const TextStyle(fontSize: 30),
             ),
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
             onPressed: () {
               setState(() {
-                myJankenText = '✋';
+                myJankenText = Hand.paper.text;
               });
               chooseComputerText();
             },
             tooltip: 'Increment',
-            child: const Text(
-              '✋',
-              style: TextStyle(fontSize: 30),
+            child: Text(
+              Hand.paper.text,
+              style: const TextStyle(fontSize: 30),
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+enum Hand {
+  rock,
+  scissors,
+  paper;
+
+  String get text {
+    switch (this) {
+      case Hand.rock:
+        return '👊';
+      case Hand.scissors:
+        return '✌️';
+      case Hand.paper:
+        return '✋';
+    }
+  }
+}
+
+enum Result {
+  win,
+  lose,
+  draw;
+
+  String get text {
+    switch (this) {
+      case Result.win:
+        return '勝ち';
+      case Result.lose:
+        return '負け';
+      case Result.draw:
+        return 'あいこ';
+    }
   }
 }
