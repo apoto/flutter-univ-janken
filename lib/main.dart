@@ -32,15 +32,41 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String myJankenText = '✌️';
-  String computerJankenText = '?';
+  Hand? myHand;
+  Hand? computerHand;
+  Result? result;
 
   void chooseComputerText() {
     final random = Random();
     final randomNumber = random.nextInt(3);
     final hand = Hand.values[randomNumber];
     setState(() {
-      computerJankenText = hand.text;
+      computerHand = hand;
+    });
+    decideResult();
+  }
+
+  void decideResult() {
+    if (myHand == null || computerHand == null) {
+      return;
+    }
+
+    final Result result;
+
+    if (myHand == computerHand) {
+      result = Result.draw;
+    } else if (myHand == Hand.rock && computerHand == Hand.scissors) {
+      result = Result.win;
+    } else if (myHand == Hand.scissors && computerHand == Hand.paper) {
+      result = Result.win;
+    } else if (myHand == Hand.paper && computerHand == Hand.rock) {
+      result = Result.win;
+    } else {
+      result = Result.lose;
+    }
+
+    setState(() {
+      this.result = result;
     });
   }
 
@@ -60,21 +86,21 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(fontSize: 30),
             ),
             Text(
-              computerJankenText,
+              computerHand?.text ?? '?',
               style: const TextStyle(fontSize: 100),
             ),
             const SizedBox(
               height: 50,
             ),
             Text(
-              Result.win.text,
+              result?.text ?? '?',
               style: const TextStyle(fontSize: 30),
             ),
             const SizedBox(
               height: 50,
             ),
             Text(
-              myJankenText,
+              myHand?.text ?? '?',
               style: const TextStyle(fontSize: 200),
             ),
           ],
@@ -86,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
           FloatingActionButton(
             onPressed: () {
               setState(() {
-                myJankenText = Hand.rock.text;
+                myHand = Hand.rock;
               });
               chooseComputerText();
             },
@@ -100,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
           FloatingActionButton(
             onPressed: () {
               setState(() {
-                myJankenText = Hand.scissors.text;
+                myHand = Hand.scissors;
               });
               chooseComputerText();
             },
@@ -114,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
           FloatingActionButton(
             onPressed: () {
               setState(() {
-                myJankenText = Hand.paper.text;
+                myHand = Hand.paper;
               });
               chooseComputerText();
             },
