@@ -99,7 +99,7 @@ class _LookThatWayState extends State<LookThatWay> {
               height: 40,
             ),
             Text(
-              resultOverall?.text ?? '?',
+              resultOverall?.text ?? '手を選択してください',
               style: const TextStyle(fontSize: 30),
             ),
             if (resultOverall == ResultOverall.win ||
