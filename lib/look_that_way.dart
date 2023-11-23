@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_univ_janken/main.dart';
+import 'package:flutter_univ_janken/janken.dart';
 
 class LookThatWay extends StatefulWidget {
+  // Look That Way = あっち向いてホイ
   const LookThatWay({
     super.key,
     required this.resultJanken,
@@ -22,10 +23,11 @@ class _LookThatWayState extends State<LookThatWay> {
   ResultOverall? resultOverall;
   bool isWaiting = false;
 
-  void chooseComputerText() {
+  void chooseComputerDirection() {
     final random = Random();
     final randomNumber = random.nextInt(3);
     final direction = Direction.values[randomNumber];
+
     setState(() {
       computerDirection = direction;
     });
@@ -33,6 +35,7 @@ class _LookThatWayState extends State<LookThatWay> {
     decideResultOverall();
 
     if (resultOverall == ResultOverall.draw) {
+      // 引き分けの場合、jankenへ戻る
       Timer(const Duration(milliseconds: 1500), () {
         Navigator.pop(context);
       });
@@ -41,6 +44,7 @@ class _LookThatWayState extends State<LookThatWay> {
 
   void decideResultLTW() {
     final ResultLTW resultLTW;
+
     if (myDirection == computerDirection) {
       resultLTW = ResultLTW.match;
     } else {
@@ -53,6 +57,7 @@ class _LookThatWayState extends State<LookThatWay> {
 
   void decideResultOverall() {
     final ResultOverall resultOverall;
+
     if (resultLTW == ResultLTW.match) {
       if (widget.resultJanken == ResultJanken.win) {
         resultOverall = ResultOverall.win;
@@ -123,7 +128,7 @@ class _LookThatWayState extends State<LookThatWay> {
                     setState(() {
                       myDirection = Direction.up;
                     });
-                    chooseComputerText();
+                    chooseComputerDirection();
                   },
             disabledElevation: 0,
             backgroundColor: isWaiting ? Colors.black12 : null,
@@ -142,7 +147,7 @@ class _LookThatWayState extends State<LookThatWay> {
                     setState(() {
                       myDirection = Direction.down;
                     });
-                    chooseComputerText();
+                    chooseComputerDirection();
                   },
             disabledElevation: 0,
             backgroundColor: isWaiting ? Colors.black12 : null,
@@ -161,7 +166,7 @@ class _LookThatWayState extends State<LookThatWay> {
                     setState(() {
                       myDirection = Direction.right;
                     });
-                    chooseComputerText();
+                    chooseComputerDirection();
                   },
             disabledElevation: 0,
             backgroundColor: isWaiting ? Colors.black12 : null,
@@ -180,7 +185,7 @@ class _LookThatWayState extends State<LookThatWay> {
                     setState(() {
                       myDirection = Direction.left;
                     });
-                    chooseComputerText();
+                    chooseComputerDirection();
                   },
             disabledElevation: 0,
             backgroundColor: isWaiting ? Colors.black12 : null,
@@ -224,6 +229,7 @@ enum ResultLTW {
 }
 
 enum ResultOverall {
+  // じゃんけん・あっち向いてホイを合算した、全体の勝敗
   win,
   lose,
   draw;
