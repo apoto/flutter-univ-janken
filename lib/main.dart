@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Hand? myHand;
   Hand? computerHand;
   ResultJanken? resultJanken;
+  bool isWaiting = false;
 
   void chooseComputerText() {
     final random = Random();
@@ -49,14 +51,25 @@ class _MyHomePageState extends State<MyHomePage> {
     decideResultJanken();
 
     if (resultJanken == ResultJanken.win || resultJanken == ResultJanken.lose) {
-      Timer(const Duration(milliseconds: 1500), () {
-        Navigator.push(
+      setState(() {
+        isWaiting = true;
+      });
+
+      Timer(const Duration(milliseconds: 1500), () async {
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => LookThatWay(resultJanken: resultJanken!),
             fullscreenDialog: true,
           ),
         );
+
+        setState(() {
+          myHand = null;
+          computerHand = null;
+          resultJanken = null;
+          isWaiting = false;
+        });
       });
     }
   }
@@ -105,10 +118,10 @@ class _MyHomePageState extends State<MyHomePage> {
               style: const TextStyle(fontSize: 100),
             ),
             const SizedBox(
-              height: 50,
+              height: 40,
             ),
             Text(
-              resultJanken?.text ?? '?',
+              resultJanken?.text ?? '手を選択してください',
               style: const TextStyle(fontSize: 30),
             ),
             if (resultJanken == ResultJanken.win ||
@@ -118,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: TextStyle(fontSize: 16),
               ),
             const SizedBox(
-              height: 50,
+              height: 40,
             ),
             Text(
               myHand?.text ?? '?',
@@ -131,13 +144,16 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: null,
-            // onPressed: () {
-            //   setState(() {
-            //     myHand = Hand.rock;
-            //   });
-            //   chooseComputerText();
-            // },
+            onPressed: isWaiting
+                ? null
+                : () {
+                    setState(() {
+                      myHand = Hand.rock;
+                    });
+                    chooseComputerText();
+                  },
+            disabledElevation: 0,
+            backgroundColor: isWaiting ? Colors.black12 : null,
             heroTag: 'rock',
             tooltip: 'rock',
             child: Text(
@@ -147,12 +163,16 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                myHand = Hand.scissors;
-              });
-              chooseComputerText();
-            },
+            onPressed: isWaiting
+                ? null
+                : () {
+                    setState(() {
+                      myHand = Hand.scissors;
+                    });
+                    chooseComputerText();
+                  },
+            disabledElevation: 0,
+            backgroundColor: isWaiting ? Colors.black12 : null,
             heroTag: 'scissors',
             tooltip: 'scissors',
             child: Text(
@@ -162,12 +182,16 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                myHand = Hand.paper;
-              });
-              chooseComputerText();
-            },
+            onPressed: isWaiting
+                ? null
+                : () {
+                    setState(() {
+                      myHand = Hand.paper;
+                    });
+                    chooseComputerText();
+                  },
+            disabledElevation: 0,
+            backgroundColor: isWaiting ? Colors.black12 : null,
             heroTag: 'paper',
             tooltip: 'paper',
             child: Text(
@@ -206,11 +230,11 @@ enum ResultJanken {
   String get text {
     switch (this) {
       case ResultJanken.win:
-        return '勝ち';
+        return '勝ち！';
       case ResultJanken.lose:
-        return '負け';
+        return '負け！';
       case ResultJanken.draw:
-        return 'あいこ';
+        return 'あいこ！もういっかい！';
     }
   }
 }

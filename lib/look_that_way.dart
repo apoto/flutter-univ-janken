@@ -20,6 +20,7 @@ class _LookThatWayState extends State<LookThatWay> {
   Direction? computerDirection;
   ResultLTW? resultLTW;
   ResultOverall? resultOverall;
+  bool isWaiting = false;
 
   void chooseComputerText() {
     final random = Random();
@@ -52,14 +53,10 @@ class _LookThatWayState extends State<LookThatWay> {
 
   void decideResultOverall() {
     final ResultOverall resultOverall;
-    if (widget.resultJanken == ResultJanken.win) {
-      if (resultLTW == ResultLTW.match) {
+    if (resultLTW == ResultLTW.match) {
+      if (widget.resultJanken == ResultJanken.win) {
         resultOverall = ResultOverall.win;
-      } else {
-        resultOverall = ResultOverall.draw;
-      }
-    } else if (widget.resultJanken == ResultJanken.lose) {
-      if (resultLTW == ResultLTW.match) {
+      } else if (widget.resultJanken == ResultJanken.lose) {
         resultOverall = ResultOverall.lose;
       } else {
         resultOverall = ResultOverall.draw;
@@ -70,6 +67,7 @@ class _LookThatWayState extends State<LookThatWay> {
 
     setState(() {
       this.resultOverall = resultOverall;
+      isWaiting = true;
     });
   }
 
@@ -93,14 +91,20 @@ class _LookThatWayState extends State<LookThatWay> {
               style: const TextStyle(fontSize: 100),
             ),
             const SizedBox(
-              height: 50,
+              height: 40,
             ),
             Text(
               resultOverall?.text ?? '?',
               style: const TextStyle(fontSize: 30),
             ),
+            if (resultOverall == ResultOverall.win ||
+                resultOverall == ResultOverall.lose)
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('もういっかい'),
+              ),
             const SizedBox(
-              height: 50,
+              height: 40,
             ),
             Text(
               myDirection?.text ?? '?',
@@ -113,12 +117,16 @@ class _LookThatWayState extends State<LookThatWay> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                myDirection = Direction.up;
-              });
-              chooseComputerText();
-            },
+            onPressed: isWaiting
+                ? null
+                : () {
+                    setState(() {
+                      myDirection = Direction.up;
+                    });
+                    chooseComputerText();
+                  },
+            disabledElevation: 0,
+            backgroundColor: isWaiting ? Colors.black12 : null,
             heroTag: 'up',
             tooltip: 'up',
             child: Text(
@@ -128,12 +136,16 @@ class _LookThatWayState extends State<LookThatWay> {
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                myDirection = Direction.down;
-              });
-              chooseComputerText();
-            },
+            onPressed: isWaiting
+                ? null
+                : () {
+                    setState(() {
+                      myDirection = Direction.down;
+                    });
+                    chooseComputerText();
+                  },
+            disabledElevation: 0,
+            backgroundColor: isWaiting ? Colors.black12 : null,
             heroTag: 'down',
             tooltip: 'down',
             child: Text(
@@ -143,12 +155,16 @@ class _LookThatWayState extends State<LookThatWay> {
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                myDirection = Direction.right;
-              });
-              chooseComputerText();
-            },
+            onPressed: isWaiting
+                ? null
+                : () {
+                    setState(() {
+                      myDirection = Direction.right;
+                    });
+                    chooseComputerText();
+                  },
+            disabledElevation: 0,
+            backgroundColor: isWaiting ? Colors.black12 : null,
             heroTag: 'right',
             tooltip: 'right',
             child: Text(
@@ -158,12 +174,16 @@ class _LookThatWayState extends State<LookThatWay> {
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                myDirection = Direction.left;
-              });
-              chooseComputerText();
-            },
+            onPressed: isWaiting
+                ? null
+                : () {
+                    setState(() {
+                      myDirection = Direction.left;
+                    });
+                    chooseComputerText();
+                  },
+            disabledElevation: 0,
+            backgroundColor: isWaiting ? Colors.black12 : null,
             heroTag: 'left',
             tooltip: 'left',
             child: Text(
