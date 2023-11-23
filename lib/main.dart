@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_univ_janken/look_that_way.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +19,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'じゃんけんポイ！！'),
+      //home: LookThatWay(resultJanken: ResultJanken.win),
     );
   }
 }
@@ -34,7 +37,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Hand? myHand;
   Hand? computerHand;
-  Result? result;
+  ResultJanken? resultJanken;
 
   void chooseComputerText() {
     final random = Random();
@@ -43,30 +46,42 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       computerHand = hand;
     });
-    decideResult();
+    decideResultJanken();
+
+    if (resultJanken == ResultJanken.win || resultJanken == ResultJanken.lose) {
+      Timer(const Duration(milliseconds: 1500), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LookThatWay(resultJanken: resultJanken!),
+            fullscreenDialog: true,
+          ),
+        );
+      });
+    }
   }
 
-  void decideResult() {
+  void decideResultJanken() {
     if (myHand == null || computerHand == null) {
       return;
     }
 
-    final Result result;
+    final ResultJanken resultJanken;
 
     if (myHand == computerHand) {
-      result = Result.draw;
+      resultJanken = ResultJanken.draw;
     } else if (myHand == Hand.rock && computerHand == Hand.scissors) {
-      result = Result.win;
+      resultJanken = ResultJanken.win;
     } else if (myHand == Hand.scissors && computerHand == Hand.paper) {
-      result = Result.win;
+      resultJanken = ResultJanken.win;
     } else if (myHand == Hand.paper && computerHand == Hand.rock) {
-      result = Result.win;
+      resultJanken = ResultJanken.win;
     } else {
-      result = Result.lose;
+      resultJanken = ResultJanken.lose;
     }
 
     setState(() {
-      this.result = result;
+      this.resultJanken = resultJanken;
     });
   }
 
@@ -93,9 +108,15 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 50,
             ),
             Text(
-              result?.text ?? '?',
+              resultJanken?.text ?? '?',
               style: const TextStyle(fontSize: 30),
             ),
+            if (resultJanken == ResultJanken.win ||
+                resultJanken == ResultJanken.lose)
+              const Text(
+                'あっち向いてホイへ進みます',
+                style: TextStyle(fontSize: 16),
+              ),
             const SizedBox(
               height: 50,
             ),
@@ -110,13 +131,15 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                myHand = Hand.rock;
-              });
-              chooseComputerText();
-            },
-            tooltip: 'Increment',
+            onPressed: null,
+            // onPressed: () {
+            //   setState(() {
+            //     myHand = Hand.rock;
+            //   });
+            //   chooseComputerText();
+            // },
+            heroTag: 'rock',
+            tooltip: 'rock',
             child: Text(
               Hand.rock.text,
               style: const TextStyle(fontSize: 30),
@@ -130,7 +153,8 @@ class _MyHomePageState extends State<MyHomePage> {
               });
               chooseComputerText();
             },
-            tooltip: 'Increment',
+            heroTag: 'scissors',
+            tooltip: 'scissors',
             child: Text(
               Hand.scissors.text,
               style: const TextStyle(fontSize: 30),
@@ -144,7 +168,8 @@ class _MyHomePageState extends State<MyHomePage> {
               });
               chooseComputerText();
             },
-            tooltip: 'Increment',
+            heroTag: 'paper',
+            tooltip: 'paper',
             child: Text(
               Hand.paper.text,
               style: const TextStyle(fontSize: 30),
@@ -173,18 +198,18 @@ enum Hand {
   }
 }
 
-enum Result {
+enum ResultJanken {
   win,
   lose,
   draw;
 
   String get text {
     switch (this) {
-      case Result.win:
+      case ResultJanken.win:
         return '勝ち';
-      case Result.lose:
+      case ResultJanken.lose:
         return '負け';
-      case Result.draw:
+      case ResultJanken.draw:
         return 'あいこ';
     }
   }
