@@ -1,16 +1,14 @@
 # flutter_univ_janken
 
-A new Flutter project.
+Flutter 大学 じゃんけんアプリ
 
-## Getting Started
+- じゃんけんの勝敗判定後、あっち向いてホイが始まります
+- あっち向いてホイの勝敗とじゃんけんの勝敗を合算した、総合の勝敗が表示されます
+- あっち向いてホイであいこの場合、自動でじゃんけん画面へ戻るようにしました
+- 各ボタンを 2 度押しできないよう、isWaiting の状態管理を用いて不活性化しています
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<p>
+<img src="assets/Janken2.png" width="30%" />
+<img src="assets/LookThatWay3.png" width="30%" />
+<img src="assets/LookThatWay1.png" width="30%" />
+</p>
